@@ -16,28 +16,32 @@ const rbgToHex = (colors) => {
 }
 
 const PaletteTool = () => {
-    const [file, setFile] = useState('');
-    const [url, setUrl] = useState('');
+    const [file, setFile] = useState(null);
+    const [url, setUrl] = useState(null);
     const [palette, setPalette] = useState([]);
+    const [loading, setLoading] = useState(false);
     const fileInput = useRef(null);
-    const image = React.createRef();
+    const image = useRef(null);
+    const imageOverlay = useRef(null);
 
     const onImageLoad = () => {
         const getPalette = async (image) => {
             let p = await paletteGenerator(image);
             setPalette(p);
         }
+        setLoading(false);
+        imageOverlay.current.classList.remove('show');
         getPalette(image.current);
     }
 
     useEffect(() => {
+        setPalette([]);
         if(file) {
+            setLoading(true);
+            imageOverlay.current.classList.add('show');
             const objectURL = URL.createObjectURL(file);
             setUrl(objectURL);
-            return () => {
-                console.log("REVOKING IMAGE URL...")
-                URL.revokeObjectURL(objectURL)
-            };
+            return () => URL.revokeObjectURL(objectURL);
         }
     }, [file]);
 
@@ -45,13 +49,17 @@ const PaletteTool = () => {
         <div className="PaletteTool">
             <div>
                 <h1>Pull a Color Palette from an image</h1>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam corporis veniam expedita alias. Nobis ullam eum nesciunt voluptatem culpa veritatis.</p>
+                <p>Simply upload the image you want to extract a color palette from and we'll generate it for you!</p>
                 <input type='file' ref={fileInput} onChange={(e) => setFile(e.target.files[0])} />
                 <button onClick={() => fileInput.current.click()} className="btn btn-primary">Upload an image</button>
+                
             </div>
                 
             <div className='image-container'>
-                {url && <img 
+                <div ref={imageOverlay} className="image-overlay">
+                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                </div>
+                {file && url && <img 
                     ref={image} 
                     onLoad={onImageLoad} 
                     src={url} 

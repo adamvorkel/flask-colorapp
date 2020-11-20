@@ -38,7 +38,7 @@ img {
 }
 
 .image-container {
-  /* height: 350px; */
+  min-height: 350px;
   /* width: 100%; */
   display: flex;
   flex-direction: column;
@@ -53,6 +53,24 @@ img {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0);
+  color: #fff;
+  display: none;
+}
+
+.image-overlay.show {
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
 }
 
 .btn {
@@ -129,4 +147,40 @@ img {
 
 .PaletteTool input[type='file'] {
   display: none;
+}
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
