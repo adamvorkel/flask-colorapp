@@ -1,7 +1,10 @@
 import React from 'react';
 
 export default () => (
-    <div>
-        Loading...
+    <div className="lds-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
     </div>
 );

@@ -3,32 +3,9 @@
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
  */
 
-// fill out a couple protovis dependencies
-/*!
- * Block below copied from Protovis: http://mbostock.github.com/protovis/
- * Copyright 2010 Stanford Visualization Group
- * Licensed under the BSD License: http://www.opensource.org/licenses/bsd-license.php
- */
-if (!pv) {
-    var pv = {
-        map: function(array, f) {
-          var o = {};
-          return f
-              ? array.map(function(d, i) { o.index = i; return f.call(o, d); })
-              : array.slice();
-        },
-        naturalOrder: function(a, b) {
-            return (a < b) ? -1 : ((a > b) ? 1 : 0);
-        },
-        sum: function(array, f) {
-          var o = {};
-          return array.reduce(f
-              ? function(p, d, i) { o.index = i; return p + f.call(o, d); }
-              : function(p, d) { return p + d; }, 0);
-        },
-        max: function(array, f) {
-          return Math.max.apply(null, f ? pv.map(array, f) : array);
-        }
+let pv = {
+    naturalOrder: function(a, b) {
+        return (a < b) ? -1 : ((a > b) ? 1 : 0);
     }
 }
  
@@ -81,7 +58,6 @@ const MMCQ = function() {
             },
             peek: function(index) {
                 if (!sorted) sort();
-                if (index===undefined) index = contents.length - 1;
                 return contents[index];
             },
             pop: function() {
@@ -236,22 +212,6 @@ const MMCQ = function() {
                 }
             }
             return pColor;
-        },
-        forcebw: function() {
-            // XXX: won't  work yet
-            var vboxes = this.vboxes;
-            vboxes.sort(function(a,b) { return pv.naturalOrder(pv.sum(a.color), pv.sum(b.color) )});
-            
-            // force darkest color to black if everything < 5
-            var lowest = vboxes[0].color;
-            if (lowest[0] < 5 && lowest[1] < 5 && lowest[2] < 5)
-                vboxes[0].color = [0,0,0];
-            
-            // force lightest color to white if everything > 251
-            var idx = vboxes.length-1,
-                highest = vboxes[idx].color;
-            if (highest[0] > 251 && highest[1] > 251 && highest[2] > 251)
-                vboxes[idx].color = [255,255,255];
         }
     };
     
@@ -294,20 +254,21 @@ const MMCQ = function() {
     function medianCutApply(histo, vbox) {
         if (!vbox.count()) return;
         
-        var rw = vbox.r2 - vbox.r1 + 1,
+        let rw = vbox.r2 - vbox.r1 + 1,
             gw = vbox.g2 - vbox.g1 + 1,
             bw = vbox.b2 - vbox.b1 + 1,
-            maxw = pv.max([rw, gw, bw]);
+            maxw = Math.max(rw, gw, bw);
+
         // only one pixel, no split
-        if (vbox.count() == 1) {
+        if (vbox.count() === 1) {
             return [vbox.copy()]
         }
-        /* Find the partial sum arrays along the selected axis. */
+        // Find the partial sum arrays along the selected axis.
         var total = 0,
             partialsum = [],
             lookaheadsum = [],
             i, j, k, sum, index;
-        if (maxw == rw) {
+        if (maxw === rw) {
             for (i = vbox.r1; i <= vbox.r2; i++) {
                 sum = 0;
                 for (j = vbox.g1; j <= vbox.g2; j++) {
@@ -320,7 +281,7 @@ const MMCQ = function() {
                 partialsum[i] = total;
             }
         }
-        else if (maxw == gw) {
+        else if (maxw === gw) {
             for (i = vbox.g1; i <= vbox.g2; i++) {
                 sum = 0;
                 for (j = vbox.r1; j <= vbox.r2; j++) {
@@ -376,8 +337,8 @@ const MMCQ = function() {
         
         }
         // determine the cut planes
-        return maxw == rw ? doCut('r') :
-            maxw == gw ? doCut('g') :
+        return maxw === rw ? doCut('r') :
+            maxw === gw ? doCut('g') :
             doCut('b');
     }
 
@@ -390,8 +351,7 @@ const MMCQ = function() {
         
         // XXX: check color content and convert to grayscale if insufficient
         
-        var histo = getHisto(pixels),
-            histosize = 1 << (3 * sigbits);
+        var histo = getHisto(pixels);
         
         // check that we aren't below maxcolors already
         var nColors = 0;

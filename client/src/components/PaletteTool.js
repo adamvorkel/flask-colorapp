@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import paletteGenerator from '../paletteGenerator';
 
 import Palette from './Palette';
+import Spinner from './Spinner';
 
 // colors: array with rgb elements (3 decimal numbers in 0 - 255)
 // returns hex string representation (prepended with #)
@@ -26,7 +27,7 @@ const PaletteTool = () => {
 
     const onImageLoad = () => {
         const getPalette = async (image) => {
-            let p = await paletteGenerator(image);
+            let p = await paletteGenerator(image, 5);
             setPalette(p);
         }
         setLoading(false);
@@ -52,12 +53,11 @@ const PaletteTool = () => {
                 <p>Simply upload the image you want to extract a color palette from and we'll generate it for you!</p>
                 <input type='file' ref={fileInput} onChange={(e) => setFile(e.target.files[0])} />
                 <button onClick={() => fileInput.current.click()} className="btn btn-primary">Upload an image</button>
-                
             </div>
                 
             <div className='image-container'>
                 <div ref={imageOverlay} className="image-overlay">
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                    <Spinner />
                 </div>
                 {file && url && <img 
                     ref={image} 

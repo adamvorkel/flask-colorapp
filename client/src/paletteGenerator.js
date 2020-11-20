@@ -3,7 +3,7 @@ import MMCQ from './quantize';
 const quantize = (pixelArray, nColors) => {
     // todo - median cut algorithm
     const quantize = MMCQ().quantize;
-    return quantize(pixelArray, 5).palette();
+    return quantize(pixelArray, nColors).palette();
 }
 
 const paletteGenerator = async (image, nColors) => {

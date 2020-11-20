@@ -37,6 +37,18 @@ img {
   max-width: 100%;
 }
 
+input {
+  padding: 0.5rem;
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid #555;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+}
+
 .image-container {
   min-height: 350px;
   /* width: 100%; */
