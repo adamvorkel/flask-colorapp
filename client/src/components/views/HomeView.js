@@ -1,12 +1,11 @@
 import React from 'react';
-import PaletteTool from '../PaletteTool';
 
 const HomeView = () => {
 
     return (
         <div className="splash">
             <div className="container">
-                <PaletteTool />
+                <h1>Color App</h1>
             </div>
         </div>
     );
